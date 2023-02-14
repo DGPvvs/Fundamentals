@@ -1,0 +1,376 @@
+﻿01. Computer Store
+
+using System;
+using System.Text;
+
+namespace Computer_Store
+{
+    class ComputerStore
+    {
+        static void Main(string[] args)
+        {
+            bool isLoopExit = false;
+
+            decimal sum = 0;
+            string input = string.Empty;
+
+            while (!isLoopExit)
+            {
+                input = Console.ReadLine();
+
+                if ((input.ToLower().Equals("special")) || (input.ToLower().Equals("regular")))
+                {
+                    isLoopExit = true;
+                }
+                else
+                {
+                    decimal inputPrice = decimal.Parse(input);
+                    if (inputPrice >= 0)
+                    {
+                        sum += inputPrice;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid price!");
+                    }
+                }
+            }
+
+            decimal taxes = .2M * sum;
+            decimal totalSum = sum + taxes;
+
+            if (input.ToLower().Equals("special"))
+            {
+                totalSum *= .9M;
+            }
+            StringBuilder sb = new StringBuilder();
+
+            if (totalSum > 0)
+            {
+                sb.AppendLine("Congratulations you've just bought a new computer!");
+                sb.AppendLine($"Price without taxes: {sum:F2}$");
+                sb.AppendLine($"Taxes: {taxes:F2}$");
+                sb.AppendLine("-----------");
+                sb.AppendLine($"Total price: {totalSum:F2}$");
+            }
+            else
+            {
+                sb.AppendLine("Invalid order!");
+            }            
+                        
+            Console.WriteLine(sb.ToString());
+        }
+    }
+}
+//Write a program that prints you a receipt for your new computer.You will receive the prices (without tax) of the parts until you receive what type of customer is this - special or regular. Once you receive the type of the customer you should print the receipt.
+//The taxes are 20% of each part's price you receive. 
+//If the customer is special, then he has a 10% discount of the price of the total price with taxes.
+//If a given price is not positive number, you should print "Invalid price!" on the console and continue with the next price.
+//If total price is equal to zero, you should print "Invalid order!" on the console.
+//Input
+//•	You will receive numbers representing prices (without tax) until command "special" or "regular":
+//Output
+//•	The receipt should be in the following format: 
+
+//"Congratulations you've just bought a new computer!
+//Price without taxes: { total price without taxes}$
+//Taxes: { total amount of taxes}$
+//-----------
+//Total price: { total price with taxes}
+//$"
+//Constraints
+//Note: All prices should be displayed to the second digit after the decimal point! The discount is applied only on the total price.  Discount is only applicable to the final price!
+//Напишете програма, която ви отпечатва разписка за новия ви компютър.
+//Ще получите цените (без данък) на частите, докато не получите какъв вид клиент е това -
+//специално или редовно. След като получите типа на клиента, който трябва да отпечатате разписката.
+//Данъците са 20% от цената на всяка част, която получавате.
+//Ако клиентът е специален, тогава той има 10% отстъпка от цената на общата цена с данъци.
+//Ако дадена цена не е положително число, трябва да отпечатате "Невалидна цена!"
+//на конзолата и продължете със следващата цена.
+//Ако общата цена е равна на нула, трябва да отпечатате "Невалиден ред!" на конзолата.
+//Въвеждане
+//•         Ще получавате числа, представляващи цени (без данък) до команда "специални" или "редовни":
+//Изход
+//•         Разписката трябва да бъде в следния формат:
+
+//"Поздравления, че току-що си купи нов компютър!
+//Цена без данъци: { обща цена без данъци}$
+//Данъци: { общ размер на данъците}$
+//-----------
+//Обща цена: { обща цена с данъци}
+//$"
+//Ограничения
+//Забележка: Всички цени трябва да се показват до втората цифри след десетичната запетая!
+//Отстъпката се прилага само върху общата цена. Отстъпка е приложима само за крайната цена!
+_______________________________________________________________________________________________
+
+02. The Lift
+
+using System;
+using System.Linq;
+using System.Text;
+
+namespace The_Lift
+{
+    class TheLift
+    {
+        static void Main(string[] args)
+        {
+            const int WagonCapacity = 4;
+
+            int peopleAreWaiting = int.Parse(Console.ReadLine());
+
+            int[] lift = Console.ReadLine()
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Select(int.Parse)
+                .ToArray();
+
+            bool isLiftFull = false;
+            bool isQueueEmpty = false;
+            if (peopleAreWaiting == 0)
+            {
+                isQueueEmpty = true;
+            }
+
+            int maxCapacity = WagonCapacity * lift.Length;
+
+            int i = 0;
+            bool flag = ((i < lift.Length) && (!isQueueEmpty));
+
+            while (flag)
+            {
+                int addPeople = WagonCapacity - lift[i];
+
+                if ((peopleAreWaiting - addPeople) > 0)
+                {
+                    peopleAreWaiting -= addPeople;
+                }
+                else
+                {
+                    addPeople = peopleAreWaiting;
+                    peopleAreWaiting = 0;
+                    isQueueEmpty = true;
+                }
+
+                lift[i] += addPeople;
+                
+                i++;
+                flag = ((i < lift.Length) && (!isQueueEmpty));
+            }
+
+            if (lift.Sum() == maxCapacity)
+            {
+                isLiftFull = true;
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            if ((!isQueueEmpty) && (isLiftFull))
+            {
+                sb.AppendLine($"There isn't enough space! {peopleAreWaiting} people in a queue!");
+            }
+            else if ((isQueueEmpty) && (!isLiftFull))
+            {
+                sb.AppendLine($"The lift has empty spots!");
+            }
+
+
+            sb.AppendLine($"{string.Join(" ", lift)}");
+
+            Console.WriteLine(sb.ToString());
+        }
+    }
+}
+//Write a program that finds a place for the tourist on a lift. 
+//Every wagon should have a maximum of 4 people on it. If a wagon is full you should direct the people to the next one with space available.
+//Input
+//•	On the first line you, will receive how many people are waiting to get on the lift
+//•	On the second line, you will you will receive the current state of the lift separated by " ".
+//Output
+//When there is no more available space left on the lift, or there are no more people in the queue,
+//you should print on the console the final state of the lift's wagons separated by " "
+//and one of the following messages:
+//•	If there are no more people and the lift have empty spots you should print:
+//"The lift has empty spots!
+//{ wagons separated by ' '}
+//"
+//•	If there are still people on the queue and no more available space, you should print:
+//"There isn't enough space! {people} people in a queue!
+//{ wagons separated by ' '}
+//"
+//•	If the lift is full and there are no more people in the queue,
+//you should print only the wagons separated by " "
+
+//    Напишете програма, която намира място за туриста на асансьор.
+//Всеки вагон трябва да има максимум 4 души на него.
+//Ако един вагон е пълен трябва да насочи хората към следващия с пространство на разположение.
+//Въвеждане
+//•         На първата линия вие, ще получите колко хора чакат да се кача на лифта
+//•         На втория редще получите текущото състояние на асансьора, разделен от " ".
+//Изход
+//Когато няма повече налично пространство, останало на асансьора, или няма повече хора на опашката,
+//трябва да отпечатате върху конзолата крайното състояние на вагоните на асансьора,
+//разделени с " " " и едно от следните съобщения:
+//•         Ако няма повече хора и асансьорът има празни петна, които трябва да отпечатате:
+//"Лифтът има празни петна!
+//{ вагони, разделени с ' '}
+//"
+//•         Ако все още има хора на опашката и няма повече налично място, трябва да отпечатате:
+//"Няма достатъчно място! {хора} хора в опашка!
+//{ вагони, разделени с ' '}
+//"
+//•         Ако асансьорът е пълен и няма повече хора на опашката, трябва да отпечатате само вагоните,
+//разделени с " "
+_______________________________________________________________________________________________________
+
+
+03. Memory Game
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Memory_Game
+{
+    class MemoryGame
+    {
+        static bool ValidateIndex(int count, int index)
+        {
+            bool result = false;
+
+            if ((index >= 0) && (index < count))
+            {
+                result = true;
+            }
+
+            return result;
+        }// bool ValidateIndex(int count, int index)
+
+        static void Main(string[] args)
+        {
+            List<string> twin = Console.ReadLine().Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            bool isExitLoop = false;
+
+            int countMoves = 0;
+
+            while (!isExitLoop)
+            {
+                string input = Console.ReadLine();
+                if (input.ToLower().Equals("end"))
+                {
+                    isExitLoop = true;
+                }
+                else
+                {
+                    string[] indexes = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                    int index1 = int.Parse(indexes[0]);
+                    int index2 = int.Parse(indexes[1]);
+                    countMoves++;
+                    int elementsCount = twin.Count;
+                    bool isValidIndex = ((ValidateIndex(elementsCount, index1))
+                        && (ValidateIndex(elementsCount, index2)) && (index1 != index2));
+                    if (isValidIndex)
+                    {
+                        if (twin[index1] == twin[index2])
+                        {
+                            Console.WriteLine($"Congrats! You have found matching elements - {twin[index1]}!");
+                            if (index1 > index2)
+                            {
+                                twin.RemoveAt(index1);
+                                twin.RemoveAt(index2);
+                            }
+                            else
+                            {
+                                twin.RemoveAt(index2);
+                                twin.RemoveAt(index1);
+                            }
+                            if (twin.Count == 0)
+                            {
+                                Console.WriteLine($"You have won in {countMoves} turns!");
+                                isExitLoop = true;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Try again!");
+                        }                        
+                    }
+                    else
+                    {
+                        int midIndex = twin.Count / 2;
+                        if (midIndex > 0)
+                        {
+                            twin.Insert(midIndex, $"-{countMoves}a");
+                            twin.Insert(midIndex, $"-{countMoves}a");
+                        }
+                        else
+                        {
+                            twin.Add($"-{countMoves}a");
+                            twin.Add($"-{countMoves}a");
+                        }
+                        Console.WriteLine("Invalid input! Adding additional elements to the board");
+                    }
+                }
+            }// while (!isExitLoop)
+
+            if (twin.Count != 0)
+            {
+                Console.WriteLine("Sorry you lose :(");
+                Console.WriteLine(string.Join(" ", twin));
+            }
+
+            
+        }
+    }
+}
+//Write a program, which receives a sequence of elements. Each element in the sequence will have a twin.
+//Until the player receives "end" from the console, he will receive strings with two integers separated
+//by space, which represent the indexes of elements in the sequence.  
+//If the player tries to cheat and enters two equal indexes or indexes which are out of bounds of the
+//sequence you should add two matching elements in the following format "-{number of moves until now}a" at the middle of the sequence and print this message on the console:
+//"Invalid input! Adding additional elements to the board"
+//Input
+//•	On the first line you will receive sequence of elements.
+//Output
+//•	Every time the player hit two matching elements you should remove them from the sequence and print on the console the following message:
+//"Congrats! You have found matching elements - ${element}!"
+//•	If the player hit two different elements, you should print on the console the following message:
+//"Try again!"
+//•	If the player hit all matching elements before he receives "end" from the console, you should print on the console the following message: 
+//"You have won in {number of moves until now} turns!"
+//•	If the player receives "end" before he hits all matching elements, you should print on the console the following message:
+//"Sorry you lose :(
+//              {
+//    the current sequence's state}"
+//Constraints
+//•	All elements in the sequence will always have a matching element.
+//Напишете програма, която получава последователност от елементи.
+//Всеки елемент в последователността ще има близнак.
+//Докато играчът не получи "край" от конзолата, той ще получава струни с две цели числености,
+//разделени от пространството, които представляват индексите на елементите в последователността.
+//Ако играчът се опита да мами и въвежда два равни индекса или индекси,
+//които са извън границите на последователността трябва да добавите два съответстващи елемента в
+//следния формат "-{брой движения до сега}a" в средата на последователността
+//и да отпечатате това съобщение на конзолата:
+//    "Невалиден вход! Добавяне на допълнителни елементи към дъската"
+//Въвеждане
+//•         На първия ред ще получите последователност от елементи.
+//Изход
+//•         Всеки път, когато играчът удари два съвпадащи елемента трябва да ги
+//премахнете от последователността и да отпечатате на конзолата следното съобщение:
+//"Поздравления! Намерили сте съответстващи елементи - ${елемент}!"
+//•         Ако плейърът удари два различни елемента, трябва да отпечатате на конзолата
+//следното съобщение:
+//"Опитай отново!"
+//•         Ако играчът удари всички съответстващи елементи, преди да получи "край" от конзолата,
+//трябва да отпечатате на конзолата следното съобщение:
+//"Спечелили сте в {брой ходове до сега} завои!"
+//•         Ако играчът получи "край", преди да удари всички съответстващи елементи,
+//трябва да отпечатате на конзолата следното съобщение:
+//"Съжалявам, че загуби :(
+//{ състоянието на текущата последователност}
+//    "
+//1.Ограничения
+//•         Всички елементи в последователността винаги ще имат съответстващ елемент.
